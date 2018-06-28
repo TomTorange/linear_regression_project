@@ -97,8 +97,8 @@ get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_matxRound')
 
 
 # DONE 计算矩阵的转置
+# https://python3-cookbook.readthedocs.io/zh_CN/latest/c04/p11_iterate_over_multiple_sequences_simultaneously.html
 def transpose(M):
-    # https://python3-cookbook.readthedocs.io/zh_CN/latest/c04/p11_iterate_over_multiple_sequences_simultaneously.html
     return [list(col) for col in zip(*M)] 
     return MT
 
@@ -446,33 +446,42 @@ def gj_Solve(A, b, decPts=4, epsilon=1.0e-16):
     # I find my first version need run in test with 2.554 s,
     # but for my current version, need run in test with 1.839 s ~ 2.30 s    :)
     
-    for c in range(len(Ab[0])-1):                               # for every column in Ab except last column
+    for c in range(len(Ab[0])-1):                       # for every column in Ab except last column
         max_value_in_low_column_c = 0
         row_need_to_change = 0
         
-        for r in range(c,len(Ab)):                              # for every row in Ab, the start of row is 'c' row          
+        for r in range(c,len(Ab)):                      # for every row in Ab, the start of row is 'c' row          
             # to judge current element is the max value in column the after c
             if abs(Ab[r][c]) > max_value_in_low_column_c: 
-                max_value_in_low_column_c = abs(Ab[r][c])          # current value is the max value
-                row_need_to_change = r                             # current row num is the row with max value
-        if abs(max_value_in_low_column_c) < epsilon: return None   # abs value should > 0, or it is singular matrix.
+                max_value_in_low_column_c = abs(Ab[r][c])   # current value is the max value
+                row_need_to_change = r                      # current row num is the row with max value
         
-        swapRows(Ab,c,row_need_to_change)   # ex-change the row with max value to the row in the position of diagonal 
+        # abs value should > 0, or it is singular matrix.
+        if abs(max_value_in_low_column_c) < epsilon: return None   
         
+        # ex-change the row with max value to the row in the position of diagonal 
+        swapRows(Ab,c,row_need_to_change)  
+        
+        # scale the dignal element to 1, take care the element not equal to 0
         if abs(Ab[c][c]) < epsilon:
             raise ValueError('divided by zero')
             return None
         else:
-            scaleRow(Ab,c,1.0/Ab[c][c])     # scale the dignal element to 1, take care the element not equal to 0
+            scaleRow(Ab,c,1.0/Ab[c][c])     
         
-        for r in range(len(A)):             # for every row, we need to cancel the element to '0', except row c.
+        # for every row, we need to cancel the element to '0', except row c.
+        for r in range(len(A)): 
             if abs(Ab[r][c]) < epsilon:
                 continue
             if r !=c:                       # the row not include the row in the position of diagonal
                 addScaledRow(Ab,r,c,-Ab[r][c])  # addScaledRow(M, r1, r2, scale) "r1 <--- r1 + r2*scale"
     
-    result_of_matrix = [[row_of_b[-1]] for row_of_b in Ab]  # the result of the matrix is the last column of Ab
-    matxRound(result_of_matrix,decPts)                      # round the result
+    # the result of the matrix is the last column of Ab
+    result_of_matrix = [[row_of_b[-1]] for row_of_b in Ab] 
+    
+    # round the result
+    matxRound(result_of_matrix,decPts) 
+    
     return result_of_matrix
 
 
