@@ -17,21 +17,6 @@
 # In[1]:
 
 
-# To increase the runing speed and code efficiency, update again and again ...
-# Reference informations as follows:
-# [1], https://baijiahao.baidu.com/s?id=1579306472315552043&wfr=spider&for=pc
-# [2], the part of "寻找列c中 对角线以及对角线以下所有元素（行 c~N）的绝对值的最大值" is revised
-#     and referenced from https://blog.csdn.net/zhe1110/article/details/79000713   :(  :(
-# [3], https://m.qlchat.com/topic/details?topicId=2000000919066007
-#      some of variable name is reference from [3], it is same as reference [2]  :( 
-# [4], https://docs.python.org/3/
-# [5], https://www.cnblogs.com/whatisfantasy/p/6273913.html , got the function of max()
-# [6], https://docs.python.org/3.4/library/functions.html#zip
-
-
-# In[2]:
-
-
 # 任意选一个你喜欢的整数，这能帮你得到稳定的结果
 seed = 128 # DONE
 
@@ -40,7 +25,7 @@ seed = 128 # DONE
 # 
 # ## 1.1 创建一个 4*4 的单位矩阵
 
-# In[3]:
+# In[2]:
 
 
 # 这个项目设计来帮你熟悉 python list 和线性代数
@@ -61,14 +46,15 @@ C = [[1],
      [3]]
 
 #DONE: 创建一个 4*4 单位矩阵
-I = [[1,0,0],
-     [0,1,0],
-     [0,0,1]]
+I = [[1,0,0,0],
+     [0,1,0,0],
+     [0,0,1,0],
+     [0,0,0,1]]
 
 
 # ## 1.2 返回矩阵的行数和列数
 
-# In[4]:
+# In[3]:
 
 
 # DONE: 返回矩阵的行数和列数
@@ -78,7 +64,7 @@ def shape(M):
     return (row, column)
 
 
-# In[5]:
+# In[4]:
 
 
 # 运行以下代码测试你的 shape 函数
@@ -87,7 +73,7 @@ get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_shape')
 
 # ## 1.3 每个元素四舍五入到特定小数数位
 
-# In[6]:
+# In[5]:
 
 
 # DONE: 每个元素四舍五入到特定小数数位
@@ -98,7 +84,7 @@ def matxRound(M, decPts=4):
             M[i][j] = round(M[i][j],decPts)
 
 
-# In[7]:
+# In[6]:
 
 
 # 运行以下代码测试你的 matxRound 函数
@@ -107,17 +93,17 @@ get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_matxRound')
 
 # ## 1.4 计算矩阵的转置
 
-# In[8]:
+# In[7]:
 
 
 # DONE 计算矩阵的转置
 def transpose(M):
-# updated and reference from [1].reason: not use nested 'for' loops.
-    MT=[[row[col] for row in M] for col in range(len(M[0]))]
+    # https://python3-cookbook.readthedocs.io/zh_CN/latest/c04/p11_iterate_over_multiple_sequences_simultaneously.html
+    return [list(col) for col in zip(*M)] 
     return MT
 
 
-# In[9]:
+# In[8]:
 
 
 # 运行以下代码测试你的 transpose 函数
@@ -126,7 +112,7 @@ get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_transpose')
 
 # ## 1.5 计算矩阵乘法 AB
 
-# In[10]:
+# In[9]:
 
 
 # DONE 计算矩阵乘法 AB，如果无法相乘则raise ValueError
@@ -145,7 +131,7 @@ def matxMultiply(A, B):
     return Res
 
 
-# In[11]:
+# In[10]:
 
 
 # 运行以下代码测试你的 matxMultiply 函数
@@ -175,7 +161,7 @@ get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_matxMultipl
 #     ...    & ... & ... & ...& ...\\
 #     a_{n1}    & a_{n2} & ... & a_{nn} & b_{n} \end{bmatrix}$
 
-# In[12]:
+# In[11]:
 
 
 # DONE 构造增广矩阵，假设A，b行数相同
@@ -184,7 +170,7 @@ def augmentMatrix(A, b):
     return [Ai + bi for Ai,bi in zip(A,b)]    # update and reference from [6]
 
 
-# In[13]:
+# In[12]:
 
 
 # 运行以下代码测试你的 augmentMatrix 函数
@@ -196,25 +182,23 @@ get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_augmentMatr
 # * 把某行乘以一个非零常数
 # * 把某行加上另一行的若干倍：
 
-# In[14]:
+# In[13]:
 
 
 # DONE r1 <---> r2
 # 直接修改参数矩阵，无返回值
 def swapRows(M, r1, r2):
-    tmp = M[r1]
-    M[r1] = M[r2]
-    M[r2] = tmp
+    M[r1],M[r2] = M[r2],M[r1]  # Python在变量交换上有更为简洁的语法，a,b = b,a即可，不需要累赘的中间变量
 
 
-# In[15]:
+# In[14]:
 
 
 # 运行以下代码测试你的 swapRows 函数# 运行以下代 
 get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_swapRows')
 
 
-# In[16]:
+# In[15]:
 
 
 # DONE r1 <--- r1 * scale# TODO  
@@ -227,14 +211,14 @@ def scaleRow(M, r, scale):
         M[r] = [i*scale for i in M[r]]
 
 
-# In[17]:
+# In[16]:
 
 
 # 运行以下代码测试你的 scaleRow 函数
 get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_scaleRow')
 
 
-# In[18]:
+# In[17]:
 
 
 # DONE r1 <--- r1 + r2*scale
@@ -243,7 +227,7 @@ def addScaledRow(M, r1, r2, scale):
     M[r1] = [x + y * scale for x,y in zip(M[r1],M[r2])]
 
 
-# In[19]:
+# In[18]:
 
 
 # 运行以下代码测试你的 addScaledRow 函数
@@ -315,7 +299,7 @@ get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_addScaledRo
 # 
 # ** 以下开始你的尝试吧!**
 
-# In[20]:
+# In[19]:
 
 
 # 不要修改这里！
@@ -337,6 +321,21 @@ printInMatrixFormat(Ab,padding=3,truncating=0)
 #     
 # $ --> \begin{bmatrix}
 #     1 & \frac{9}{8} & -\frac{5}{8} & \frac{1}{8} \\    
+#     8 & 0 & -8 & 1 \\    
+#     1 & 7 & 6 & 1 \end{bmatrix}$
+#     
+# $ --> \begin{bmatrix}
+#     1 & \frac{9}{8} & -\frac{5}{8} & \frac{1}{8} \\    
+#     0 & -9 & -3 & 0 \\    
+#     1 & 7 & 6 & 1 \end{bmatrix}$    
+#     
+# $ --> \begin{bmatrix}
+#     1 & \frac{9}{8} & -\frac{5}{8} & \frac{1}{8} \\    
+#     0 & -9 & -3 & 0 \\    
+#     0 & \frac{47}{8} & \frac{53}{8} & \frac{7}{8} \end{bmatrix}$        
+#     
+# $ --> \begin{bmatrix}
+#     1 & \frac{9}{8} & -\frac{5}{8} & \frac{1}{8} \\    
 #     0 & -9 & -3 & 0 \\    
 #     0 & \frac{47}{8} & \frac{53}{8} & \frac{7}{8} \end{bmatrix}$
 #     
@@ -344,12 +343,17 @@ printInMatrixFormat(Ab,padding=3,truncating=0)
 # $ --> \begin{bmatrix}
 #     1 & \frac{9}{8} & -\frac{5}{8} & \frac{1}{8} \\    
 #     0 & 1 & \frac{1}{3} & 0 \\    
-#     0 & 1 & \frac{53}{47} & \frac{7}{47} \end{bmatrix}$      
+#     0 & \frac{47}{8} & \frac{53}{8} & \frac{7}{8} \end{bmatrix}$      
 #     
 # $ --> \begin{bmatrix}
-#     1 & \frac{9}{8} & -\frac{5}{8} & \frac{1}{8} \\    
+#     1 & 0 & -1 & \frac{1}{8} \\    
 #     0 & 1 & \frac{1}{3} & 0 \\    
-#     0 & 0 & 1 & \frac{3}{16} \end{bmatrix}$  
+#     0 & \frac{47}{8} & \frac{53}{8} & \frac{7}{8} \end{bmatrix}$  
+#     
+# $ --> \begin{bmatrix}
+#     1 & 0 & -1 & \frac{1}{8} \\    
+#     0 & 1 & \frac{1}{3} & 0 \\    
+#     0 & 0 & \frac{14}{3} & \frac{7}{8} \end{bmatrix}$ 
 #     
 # $ --> \begin{bmatrix}
 #     1 & 0 & -1 & \frac{1}{8} \\    
@@ -358,10 +362,15 @@ printInMatrixFormat(Ab,padding=3,truncating=0)
 # 
 # $ --> \begin{bmatrix}
 #     1 & 0 & 0 & \frac{5}{16} \\    
+#     0 & 1 & \frac{1}{3} & 0 \\    
+#     0 & 0 & 1 & \frac{3}{16} \end{bmatrix}$ 
+# 
+# $ --> \begin{bmatrix}
+#     1 & 0 & 0 & \frac{5}{16} \\    
 #     0 & 1 & 0 & -\frac{1}{16} \\    
 #     0 & 0 & 1 & \frac{3}{16} \end{bmatrix}$ 
 
-# In[21]:
+# In[20]:
 
 
 # 不要修改这里！# 不要修改这 
@@ -384,36 +393,32 @@ printInMatrixFormat(Ab,padding=3,truncating=0)
 #     1 & \frac{2}{9} & \frac{1}{9} & -\frac{1}{9} \\
 #     -4 & -4 & -1 & 1 \\
 #     9 & 2 & 1 & 1 \end{bmatrix}$
-# 
-# $ --> \begin{bmatrix}
-#     1 & \frac{2}{9} & \frac{1}{9} & -\frac{1}{9} \\
-#     0 & \frac{28}{9} & \frac{5}{9} & -\frac{5}{9} \\
-#     0 & 0 & 0 & 2 \end{bmatrix}$
 #     
 # $ --> \begin{bmatrix}
 #     1 & \frac{2}{9} & \frac{1}{9} & -\frac{1}{9} \\
-#     0 & 1 & \frac{5}{24} & -\frac{5}{24} \\
-#     0 & 0 & 0 & 2 \end{bmatrix}$
+#     0 & -\frac{28}{9} & -\frac{5}{9} & \frac{5}{9} \\
+#     9 & 2 & 1 & 1 \end{bmatrix}$
 # 
+# $ --> \begin{bmatrix}
+#     1 & \frac{2}{9} & \frac{1}{9} & -\frac{1}{9} \\
+#     0 & -\frac{28}{9} & -\frac{5}{9} & \frac{5}{9} \\
+#     0 & 0 & 0 & 2 \end{bmatrix}$
+#     
 # $ --> \begin{bmatrix}
 #     1 & \frac{2}{9} & \frac{1}{9} & -\frac{1}{9} \\
 #     0 & 1 & \frac{5}{28} & -\frac{5}{28} \\
 #     0 & 0 & 0 & 2 \end{bmatrix}$
 #     
 # $ --> \begin{bmatrix}
-#     1 & 0 & \frac{1}{14} & -\frac{1}{14} \\
-#     0 & 1 & \frac{5}{28} & -\frac{5}{28} \\
-#     0 & 0 & 0 & 1 \end{bmatrix}$
-# 
-# $ --> \begin{bmatrix}
-#     1 & 0 & \frac{1}{14} & 0 \\
-#     0 & 1 & \frac{5}{28} & 0 \\
-#     0 & 0 & 0 & 1 \end{bmatrix}$
-# $...$
+#     1 & 0 & \frac{1}{14} & \frac{19}{76} \\
+#     0 & 1 & \frac{5}{28} & \frac{5}{28} \\
+#     0 & 0 & 0 & 2 \end{bmatrix}$
+#     
+# return None
 # 
 # ## 2.3.3 实现 Gaussian Jordan 消元法
 
-# In[22]:
+# In[21]:
 
 
 # DONE 实现 Gaussain Jordan 方法求解 Ax = b
@@ -429,61 +434,56 @@ printInMatrixFormat(Ab,padding=3,truncating=0)
     返回None，如果 A，b 高度不同
     返回None，如果 A 为奇异矩阵
 """
-
+    
 def gj_Solve(A, b, decPts=4, epsilon=1.0e-16):
     if len(A) != len(b):                 # checking row A is equal to row B
         raise ValueError('the column of Matrix A is not equal to the row of Matrix b')
         return None
     Ab = augmentMatrix(A, b)
     
-    # the len(A) is reference from[2], to consider every row of matrix A
-    # the reason to adopt reference [2], is to save the the code to not loop from column.
-    for c in range(len(A)): 
-        # the transpose to get the low row of the column after the digonal value
-        col_low_row = transpose(Ab)[c][c:]
+    # according the result of first review and further understand the "算法推演"
+    # re-write the "for loop" of the column and "for loop" of the row without any reference  :)
+    # I find my first version need run in test with 2.554 s,
+    # but for my current version, need run in test with 1.839 s ~ 2.30 s    :)
+    
+    for c in range(len(Ab[0])-1):                               # for every column in Ab except last column
+        max_value_in_low_column_c = 0
+        row_need_to_change = 0
         
-        # reference [3],[5], reason: max_abs_val = max(abs(row_of_c ~ row_of_N)) max_row = cur_row
-        max_abs_value = max(col_low_row, key=lambda i: abs(i))
+        for r in range(c,len(Ab)):                              # for every row in Ab, the start of row is 'c' row          
+            # to judge current element is the max value in column the after c
+            if abs(Ab[r][c]) > max_value_in_low_column_c: 
+                max_value_in_low_column_c = abs(Ab[r][c])          # current value is the max value
+                row_need_to_change = r                             # current row num is the row with max value
+        if abs(max_value_in_low_column_c) < epsilon: return None   # abs value should > 0, or it is singular matrix.
         
-        # if the absolute Maximum value is Zero, A is singular Matrix
-        if abs(max_abs_value) < epsilon: return None
-        # to add number of c column after the digonal index
-        max_row_num = col_low_row.index(max_abs_value) + c 
-
-        # the first line transformation: reference from[3],将绝对值最大值所在行交换到对角线元素所在行（行c）
-        if c != max_row_num:       
-            swapRows(Ab, c, max_row_num)   # swapRows(Ab,c,max_row)
-
-        # the second line transformation:  将列c的对角线元素缩放为1
+        swapRows(Ab,c,row_need_to_change)   # ex-change the row with max value to the row in the position of diagonal 
+        
         if abs(Ab[c][c]) < epsilon:
             raise ValueError('divided by zero')
             return None
         else:
-            scaleRow(Ab, c, 1.0/Ab[c][c])
-
-        # the third line transformation: 多次使用第三个行变换，将列c的其他元素消为0
-        for r in range(len(Ab)):
-            if r != c:     # 不包括c行
-            # use the function that I defined "addScaledRow(M, r1, r2, scale)" 
-            # to elimination other rows to 0, -Ab[r][c] !=0 is the scale
-                if abs(-Ab[r][c]) < epsilon:
-                    continue
-                addScaledRow(Ab, r, c, -Ab[r][c])      # -Ab[r][c] is the scale
+            scaleRow(Ab,c,1.0/Ab[c][c])     # scale the dignal element to 1, take care the element not equal to 0
+        
+        for r in range(len(A)):             # for every row, we need to cancel the element to '0', except row c.
+            if abs(Ab[r][c]) < epsilon:
+                continue
+            if r !=c:                       # the row not include the row in the position of diagonal
+                addScaledRow(Ab,r,c,-Ab[r][c])  # addScaledRow(M, r1, r2, scale) "r1 <--- r1 + r2*scale"
     
-    # reference from [2], return Ab 的最后一列(matxRound(M, decPts=4))
-    solution = [[row_of_b[-1]] for row_of_b in Ab]
-    matxRound(solution,decPts)
-    return solution
+    result_of_matrix = [[row_of_b[-1]] for row_of_b in Ab]  # the result of the matrix is the last column of Ab
+    matxRound(result_of_matrix,decPts)                      # round the result
+    return result_of_matrix
 
 
-# In[23]:
+# In[22]:
 
 
 # 运行以下代码测试你的 gj_Solve 函数
 get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_gj_Solve')
 
 
-# ## (选做) 2.4 算法正确判断了奇异矩阵：¶
+# ## (选做) 2.4 算法正确判断了奇异矩阵：
 # 在算法的步骤3 中，如果发现某一列对角线和对角线以下所有元素都为0，那么则断定这个矩阵为奇异矩阵。
 # 
 # 我们用正式的语言描述这个命题，并证明为真。
@@ -506,10 +506,10 @@ get_ipython().magic('run -i -e test.py LinearRegressionTestCase.test_gj_Solve')
 # 考虑矩阵 A 的某一列是其他列的线性组合
 # TODO 证明：|
 
-# # 3 线性回归¶
+# # 3 线性回归
 # ## 3.1 随机生成样本点
 
-# In[24]:
+# In[23]:
 
 
 # 不要修改这里！
@@ -523,7 +523,7 @@ vs_scatter_2d(X, Y)
 # ## 3.2 拟合一条直线
 # ### 3.2.1 猜测一条直线
 
-# In[25]:
+# In[24]:
 
 
 #DONE 请选择最适合的直线 y = mx + b
@@ -539,7 +539,7 @@ vs_scatter_2d(X, Y, m1, b1)
 # MSE = \frac{1}{n}\sum_{i=1}^{n}{(y_i - mx_i - b)^2}
 # $$
 
-# In[26]:
+# In[25]:
 
 
 # DONE 实现以下函数并输出所选直线的MSE
@@ -650,10 +650,10 @@ print(calculateMSE2D(X,Y,m1,b1))
 # ## 3.4 求解 $X^TXh = X^TY$  
 # 在3.3 中，我们知道线性回归问题等价于求解 $X^TXh = X^TY$ (如果你选择不做3.3，就勇敢的相信吧，哈哈)
 
-# In[27]:
+# In[26]:
 
 
-# TODO 实现线性回归
+# DONE 实现线性回归
 '''
 参数：X, Y 存储着一一对应的横坐标与纵坐标的两个一维数组
 返回：线性回归的系数(如上面所说的 m, b)
@@ -661,17 +661,17 @@ print(calculateMSE2D(X,Y,m1,b1))
 # XT*X*h = XT*Y ---> AX=B ---> gj_Solve(A, b, decPts=4, epsilon=1.0e-16) 
 #                         ---> XT*X --> A, x --> h, XT*Y --> b 
 def linearRegression2D(X,Y):
-    MX = [[x,1] for x in X]      # reference[2]: reason: Array to Matrix
-    Y = [[y] for y in Y]         # reference[2]: reason: Array to Matrix 
+    MX = [[x,1] for x in X]      # reference: https://docs.python.org/3/tutorial/datastructures.html
+    Y = [[y] for y in Y]
     XT = transpose(MX)
     A = matxMultiply(XT, MX)     # A = XT * X
     b = matxMultiply(XT, Y)     # b = XT * Y
     h = gj_Solve(A, b, decPts=4, epsilon=1.0e-16)
     
-    return h[0][0],h[1][0]       # reference[2]: reason: two dimension, not list.
+    return h[0][0],h[1][0]
 
 
-# In[28]:
+# In[27]:
 
 
 # 请不要修改下面的代码
@@ -683,7 +683,7 @@ print(m2,b2)
 
 # 你求得的回归结果是什么？ 请使用运行以下代码将它画出来。
 
-# In[29]:
+# In[28]:
 
 
 ## 请不要修改下面的代码
@@ -695,7 +695,7 @@ print(calculateMSE2D(X,Y,m2,b2))
 # 如果你的高斯约当消元法通过了单元测试, 那么它将能够解决多维的回归问题
 # 你将会在更高维度考验你的线性回归实现
 
-# In[30]:
+# In[29]:
 
 
 # 生成三维的数据点
@@ -705,14 +705,14 @@ vs_scatter_3d(X_3d, Y_3d)
 
 # 你的线性回归是否能够对付三维的情况?
 
-# In[31]:
+# In[30]:
 
 
 def linearRegression(X,Y):
     return None
 
 
-# In[32]:
+# In[31]:
 
 
 coeff  =  linearRegression(X_3d, Y_3d)
